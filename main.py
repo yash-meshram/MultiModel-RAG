@@ -269,8 +269,38 @@ def multimodel_prompt(query, retrieved_docs):
         
     return HumanMessage(content = content)
 
+# Enhanced query
+def enhance_query(query):
+    """Use LLM to enhance query for better retrieval"""
+    
+    message = HumanMessage(content=[
+        {
+            "type": "text",
+            "text": f"""You are a query enhancement assistant.
+            
+                Your job is to rewrite the user query to make it more detailed and specific
+                for retrieving relevant documents from a research paper.
+
+                Original Query: {query}
+
+                Rewrite the query by:
+                1. Adding relevant technical terms
+                2. Expanding abbreviations
+                3. Including related concepts
+                4. Being more specific and descriptive
+
+                Return ONLY the enhanced query, nothing else. No explanation, no preamble."""
+        }
+    ])
+    
+    response = llm.invoke([message])
+    return response.content
+
 # building the pipeline
-def multimodel_pdf_rag_pipeline(query):
+def multimodel_pdf_rag_pipeline(query_):
+    # Enhanced the query
+    query = enhance_query(query_)
+    
     # Retrieve relevant documents
     retrieved_docs = multimodel_retriever(query = query, k = 5)    
     
