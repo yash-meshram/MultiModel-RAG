@@ -9,3 +9,5 @@ numpy
 Pillow
 python-dotenv
 faiss-cpu
+typesense
+sentence-transformers
